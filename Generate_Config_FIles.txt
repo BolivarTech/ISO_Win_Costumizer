@@ -1,0 +1,53 @@
+Generate Config FIles
+
+* Remove other edition in the wim file:
+
+Get the list of available Windows editions in the install.wim file:
+
+    Dism /Get-WimInfo /WimFile:"I:\sources\install.wim"  > .\configs\win_editions_remove.txt
+
+Edit win_editions_remove.txt and only leave the packge names to remove
+
+
+*  Remove preinstalled apps in the ISO 
+ 
+List Aplications:
+
+    Dism.exe /image:.\mount /Get-ProvisionedAppxPackages > .\configs\appsRemove.txt
+
+Edit appRemove.txt and only leave the packge names to remove
+
+
+* Disable or Remove Capabilities & Features:
+
+
+    Get-WindowsCapability -Path .\mount | Where-Object{$_.State -eq "Installed"} > .\configs\capabilities_remove.txt
+
+Edit capabilities_remove.txt and only leave the packge names to remove
+
+
+
+* Add Capabilities:
+
+
+    Get-WindowsCapability -Path .\mount | Where-Object{$_.State -eq "NotPresent"} > .\configs\capabilities_add.txt
+
+Edit capabilities_add.txt and only leave the packge names to add
+
+
+
+* Optional Features
+
+
+Get Windows Enabled Optional Features:
+
+    Get-WindowsOptionalFeature -Path .\mount | Where-Object{$_.State -eq "Enabled"} > .\configs\optionalfeatures_remove.txt
+
+Edit optionalfeatures_remove.txt and only leave the featrues names to remove
+
+
+Get Windows Disabled Optional Features:
+
+    Get-WindowsOptionalFeature -Path .\mount | Where-Object{$_.State -eq "Disabled"} > .\configs\optionalfeatures_add.txt
+
+Edit optionalfeatures_add.txt and only leave the featrues names to add
